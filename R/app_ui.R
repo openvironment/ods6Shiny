@@ -50,7 +50,7 @@ app_ui <- function(request) {
 #' @import shinydashboard
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
 #' @noRd
-golem_add_external_resources <- function(){
+golem_add_external_resources <- function() {
   
   add_resource_path(
     'www', app_sys('app/www')
@@ -58,9 +58,17 @@ golem_add_external_resources <- function(){
   
   tags$head(
     favicon(),
+    tags$link(
+      rel = "stylesheet",
+      href = "https://use.fontawesome.com/releases/v5.13.0/css/all.css"
+    ),
+    tags$link(
+      rel = "stylesheet",
+      href = "https://use.fontawesome.com/releases/v5.13.0/css/v4-shims.css"
+    ),
     bundle_resources(
       path = app_sys('app/www'),
-      app_title = 'templateGolem'
+      app_title = 'ODS6'
     )
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 

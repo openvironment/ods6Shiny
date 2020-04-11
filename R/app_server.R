@@ -6,7 +6,7 @@
 #' @noRd
 app_server <- function(input, output, session ) {
   
-  base_completa <- ods6Shiny::base_completa
+  base_indicadores <- ods6Shiny::base_indicadores
   
   ggplot2::theme_set(ggplot2::theme_minimal())
   
@@ -18,6 +18,6 @@ app_server <- function(input, output, session ) {
   callModule(
     mod_visao_cidade_server, 
     "visao_cidade_ui_1",
-    base_completa
+    base_indicadores
   )
 }
