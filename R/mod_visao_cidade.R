@@ -26,18 +26,21 @@ mod_visao_cidade_ui <- function(id) {
       ),
       separador_secao(),
       box(
-        width = 4,
+        width = 3,
         title = "Resumo",
+        height = "600px",
         reactable::reactableOutput(ns("tab_resumo"))
       ),
       box(
-        width = 4,
+        width = 3,
         title = "Alertas",
+        height = "600px",
         reactable::reactableOutput(ns("tab_alertas"))
       ),
       box(
-        width = 4,
-        highcharter::highchartOutput(ns("plot_mapa"))
+        width = 6,
+        height = "600px",
+        highcharter::highchartOutput(ns("plot_mapa"), height = "550px")
       ),
       separador_secao(),
       box(
@@ -83,7 +86,7 @@ mod_visao_cidade_server <- function(input, output, session, base_indicadores) {
       dplyr::pull(populacao) %>% 
       formatar_numero(accuracy = 1) %>% 
       valueBox(
-        subtitle = "População estimada",
+        subtitle = "habitantes",
         icon = icon("user-friends"),
         color = "aqua"
       )
@@ -95,7 +98,7 @@ mod_visao_cidade_server <- function(input, output, session, base_indicadores) {
       dplyr::pull(num_domicilios) %>%
       formatar_numero(accuracy = 1) %>% 
       valueBox(
-        subtitle = "Número estimado de domicílios",
+        subtitle = "domicílios",
         icon = icon("home"),
         color = "aqua"
       )
@@ -107,7 +110,7 @@ mod_visao_cidade_server <- function(input, output, session, base_indicadores) {
       dplyr::pull(taxa_hab_domicilio) %>%
       formatar_numero() %>% 
       valueBox(
-        subtitle = "Habitantes por domicílio",
+        subtitle = "habitantes/domicílio",
         icon = icon("house-user"),
         color = "aqua"
       )
@@ -180,6 +183,25 @@ mod_visao_cidade_server <- function(input, output, session, base_indicadores) {
       )
   })
   
+  output$plot_mapa <- highcharter::renderHighchart({
+    
+    req(input$select_cidade)
+    
+    tab <- base_indicadores %>%
+      filtrar_ano_mais_recente() %>% 
+      dplyr::distinct(munip_cod, munip_nome, populacao) %>% 
+      dplyr::mutate(
+        value = ifelse(munip_nome == input$select_cidade, 1, 0),
+        populacao = formatar_numero(populacao, accuracy = 1)
+      )
+    
+    hc_mapa(
+      tab,
+      ods6Shiny::geojson_munip
+    )
+    
+  })
+  
   output$ui_select_indicador <- renderUI({
 
     opcoes <- base_indicadores %>%
@@ -192,6 +214,7 @@ mod_visao_cidade_server <- function(input, output, session, base_indicadores) {
       choices = opcoes
     )
   })
+  
   
   # dados_filtrados <- reactive({
   #   

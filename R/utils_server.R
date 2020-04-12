@@ -11,3 +11,6 @@ show_data <- function() {
 formatar_numero <- function(x, accuracy = 0.1) {
   scales::number(x, big.mark = ".", decimal.mark = ",", accuracy = accuracy)
 }
+
+#' Pipe
+`%>%` <- dplyr::`%>%`
